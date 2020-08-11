@@ -1,0 +1,71 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: barn1
+"""
+
+from itertools import combinations
+
+def is_consecutive(first, second):
+	if second == first + 1:
+		return True
+	else:
+		return False
+
+def condense(stall_list, max_boards):
+	if len(stall_list) == max_boards:
+		return "Done"
+	else:
+		gaps = []
+		for i in range(1, len(stall_list)):
+			gaps.append(stall_list[i][0] - stall_list[i-1][1])
+		
+		index = gaps.index(sorted(gaps)[0])
+		
+		stall_list[index] = [stall_list[index][0], stall_list[index + 1][1]]
+		stall_list.pop(index + 1)
+		
+		return "Not Done"
+
+fin = open('barn1.in', 'r')
+fout = open('barn1.out', 'w')
+
+M, S, C = fin.readline().rstrip("\n").split()
+M = int(M)
+S = int(S)
+C = int(C)
+
+if M > C:
+	M = C
+stalls = []
+
+for i in range(C):
+	stalls.append(int(fin.readline().rstrip("\n")))
+
+stalls.sort()
+
+previous = stalls[0]
+start = stalls[0]
+temp_stalls = []
+
+for i in range(1, len(stalls)):
+	if is_consecutive(previous, stalls[i]):
+		previous = stalls[i]
+	else:
+		temp_stalls.append([start, previous])
+		previous = stalls[i]
+		start = stalls[i]
+
+temp_stalls.append([start, stalls[-1]])
+stalls = temp_stalls
+
+while True:
+    if condense(stalls, M) == "Done":
+        break
+
+total = 0
+for stall in stalls:
+    total += stall[1] - stall[0] + 1
+
+
+fout.write(str(total) + "\n")
