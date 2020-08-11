@@ -1,0 +1,84 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: transform
+"""
+
+fin = open('transform.in', 'r')
+fout = open('transform.out', 'w')
+
+N = int(fin.readline())
+
+old_rows = []
+new_rows = []
+new_columns = []
+old_reflection_rows = []
+for i in range(N):
+	old_rows.append(fin.readline().rstrip("\n"))
+
+for i in range(N):
+	new_rows.append(fin.readline().rstrip("\n")) 
+
+def row_reflector(reflection_row_list, row_list):
+	for i in range(N):
+		row = ""
+		for x in range(N):
+			row += row_list[i][N-1-x]
+		reflection_row_list.append(row)
+
+def column_maker(column_list, row_list):
+	for x in range(N):
+		column = ""
+		for i in range(N):
+			column += row_list[i][x]
+		column_list.append(column)
+
+column_maker(new_columns, new_rows)
+row_reflector(old_reflection_rows, old_rows)
+def uno(x, y):
+	for i in range(N):
+		if x[i] != y[N-1-i]:
+			return False
+	return True
+def two(x, y):
+	for i in range(N):
+		if x[i] != y[N-1-i]:
+			return False
+	return True
+def three(x, y):
+	for i in range(N):
+		if x[i] != y[i]:
+			return False
+	return True
+def four(x, y):
+	for i in range(N):
+		if x[i] != y[i]:
+			return False
+	return True
+def five():
+	if uno(old_reflection_rows, new_columns):
+		return True
+	elif two(old_rows, new_rows):
+		return True
+	elif three(old_reflection_rows, new_columns):
+		return True
+	else:
+		return False
+	
+
+if uno(old_rows, new_columns):
+	fout.write("1\n")
+elif two(old_reflection_rows, new_rows):
+	fout.write("2\n")
+elif three(old_rows, new_columns):
+	fout.write("3\n")
+elif four(old_reflection_rows, new_rows):
+	fout.write("4\n")
+elif five():
+	fout.write("5\n")
+elif old_rows == new_rows:
+	fout.write("6\n")
+else:
+	fout.write("7\n")	
+
+

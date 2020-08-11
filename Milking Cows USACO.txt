@@ -1,0 +1,67 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: milk2
+"""
+fin = open('milk2.in', 'r')
+fout = open('milk2.out', 'w')
+
+N = int(fin.readline())
+times = []
+
+for i in range(N):
+	time = fin.readline().split()
+	time[0] = int(time[0])
+	time[1] = int(time[1])
+	times.append(time)
+
+times.sort()
+times2 = []
+previous = times[0]
+for time in times:
+	if time[0] <= previous[1]:
+		if time[1] >= previous[1]:
+			previous[1] = time[1]
+	else:
+		times2.append(previous)
+		previous = time
+
+times2.append(previous)
+
+times = times2.copy()
+times2 = []
+for time in times:
+	times2.append(time[0])
+	times2.append(time[1])
+
+times = times2.copy()
+
+sums = []
+diffs = []
+previous = times[0]
+milking = True
+for i in range(len(times) - 1):
+	if milking:
+		sums.append(times[i + 1] - previous)
+		milking = False
+		previous = times[i + 1]
+	else:
+		diffs.append(times[i + 1] - previous)
+		milking = True
+		previous = times[i + 1]
+
+x = 0
+if sums != []:
+	for sum in sums:
+		if sum > x:
+			x = sum
+
+y = 0
+if diffs != []:
+	for diff in diffs:
+		if diff > y:
+			y = diff
+
+fout.write(str(x) + " " + str(y) + "\n")
+			
+	

@@ -1,0 +1,49 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: crypt1
+"""
+def inNums(x, y):
+	for digit in str(x):
+		if int(digit) not in y:
+			return False
+	return True
+
+fin = open("crypt1.in", 'r')
+fout = open("crypt1.out", 'w')
+
+N = int(fin.readline().rstrip("\n"))
+
+nums = fin.readline().rstrip("\n").split()
+
+for i in range(len(nums)):
+	nums[i] = int(nums[i])
+print(nums)
+a_list = []
+b_list = []
+
+for a in nums:
+	for b in nums:
+		for c in nums:
+			a_list.append([a, b, c])
+
+for a in nums:
+	for b in nums:
+		b_list.append([a, b])
+
+total = 0
+for a in a_list:
+	for b in b_list:
+		first = a[0] * 100 + a[1] * 10 + a[2]
+		second = b[0] * 10 + b[1]
+		if inNums(first * second, nums) and (first * second / 1000 < 10 and first * second / 100 >= 10):
+			pp1 = first * b[1]
+			pp2 = first * b[0]
+			if inNums(pp1, nums) and inNums(pp2, nums):
+				if (pp1 / 100 < 10 and pp1 / 10 >= 10) and (pp2 / 100 < 10 and pp2 / 10 >= 10):
+					total += 1
+		
+
+
+
+fout.write(str(total) + "\n")

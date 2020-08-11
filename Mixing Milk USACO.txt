@@ -1,0 +1,35 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: milk
+"""
+
+fin = open('milk.in', 'r')
+fout = open('milk.out', 'w')
+
+N, M = fin.readline().rstrip("\n").split()
+
+N = int(N)
+M = int(M)
+
+prices = []
+
+for i in range(M):
+	prices.append(fin.readline().rstrip("\n").split())
+	prices[i][0] = int(prices[i][0])
+	prices[i][1] = int(prices[i][1])
+
+prices.sort()	
+
+milk = 0
+money = 0
+for price in prices:
+	if milk <= N:
+		if milk + price[1] <= N:
+			milk += price[1]
+			money += price[0] * price[1]
+		else:
+			money += price[0] * (N - milk)
+			milk = N
+
+fout.write(str(money) + "\n")

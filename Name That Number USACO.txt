@@ -1,0 +1,31 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: namenum
+"""
+fin = open('namenum.in', 'r')
+fout = open('namenum.out', 'w')
+names = open('dict.txt', 'r')
+
+num = fin.readline().rstrip("\n")
+
+keypad = {"2": ["A", "B", "C"], "3": ["D", "E", "F"], "4": ["G", "H", "I"], "5": ["J", "K", "L"], "6": ["M", "N", "O"], "7": ["P", "R", "S"], "8": ["T", "U", "V"], "9": ["W", "X", "Y"]}
+
+acceptable = []	
+
+for i in range(4617):
+	name = names.readline().rstrip("\n")
+	if len(name) == len(num):
+		for i in range(len(name)):
+			if name[i] in keypad[num[i]]:
+				if i == len(name) - 1:
+					acceptable.append(name)
+			else:
+				break
+
+if acceptable == []:
+	fout.write("NONE\n")
+else:
+	for name in acceptable:
+		fout.write(name + "\n")
+

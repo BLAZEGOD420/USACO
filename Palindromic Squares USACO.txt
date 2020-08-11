@@ -1,0 +1,50 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: palsquare
+"""
+fin = open('palsquare.in', 'r')
+fout = open('palsquare.out', 'w')
+
+N = int(fin.readline().rstrip("\n"))
+d = {10 : 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F', 16: 'G', 17: 'H', 18: 'I', 19: 'J'}
+def isPalindrome(x):
+	forward = x
+	backward = ""
+	for i in range(len(x)):
+		backward += forward[len(x) - i - 1]
+	if forward == backward:
+		return True
+	else:
+		return False
+
+def toBase(x, num):
+	quotient = 0
+	remainder = 0
+	remainders = []
+	converted = ""
+	if x == 10:
+		return num
+	else:
+		while True:
+			quotient = num // x
+			remainder = num % x
+			if quotient != 0:
+				if remainder >= 10:
+					remainder = d[remainder]
+				remainders.append(remainder)
+				num = quotient
+			else:
+				if remainder >= 10:
+					remainder = d[remainder]
+				remainders.append(remainder)
+				break
+		for i in range(len(remainders)):
+			converted += str(remainders[len(remainders) - i - 1])
+		return converted
+
+for i in range(1, 301):
+	square = i * i
+	square = toBase(N, square)
+	if isPalindrome(str(square)):
+		fout.write(str(toBase(N, i)) + " " + str(square) + "\n")

@@ -1,0 +1,56 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: dualpal
+"""
+fin = open('dualpal.in', 'r')
+fout = open('dualpal.out', 'w')
+
+def isPalindrome(x):
+	forward = x
+	backward = ""
+	for i in range(len(x)):
+		backward += forward[len(x) - i - 1]
+	if forward == backward:
+		return True
+	else:
+		return False
+def toBase(x, num):
+	quotient = 0
+	remainder = 0
+	remainders = []
+	converted = ""
+	if x == 10:
+		return num
+	else:
+		while True:
+			quotient = num // x
+			remainder = num % x
+			if quotient != 0:
+				remainders.append(remainder)
+				num = quotient
+			else:
+				remainders.append(remainder)
+				break
+		for i in range(len(remainders)):
+			converted += str(remainders[len(remainders) - i - 1])
+		return converted
+
+input = fin.readline().split()
+
+N = int(input[0])
+
+S = int(input[1])
+
+n = 0
+while n < N:
+	S += 1
+	y = 0
+	for i in range(2, 11):
+		if isPalindrome(str(toBase(i, S))):
+			y += 1
+	if y >= 2:
+		n += 1
+		fout.write(str(S)  + "\n")
+
+	
