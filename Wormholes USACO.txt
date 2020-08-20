@@ -1,0 +1,66 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: wormhole
+"""
+
+fin = open('wormhole.in', 'r')
+fout = open('wormhole.out', 'w')
+
+def recursive(x):
+    if not x:
+        yield []
+        return
+    
+    a = x[0]
+    for i in range(1, len(x)):
+        pair = (a, x[i])
+        for rest in recursive(x[1:i] + x[i+1:]):
+            yield [pair] + rest
+
+def onRight(x, y):
+	for wormhole in wormholes:
+		if wormhole[1] == x[1] and wormhole[0] > x[0]:
+			return wormhole
+	return []
+def other(x, y):
+	for a in range(len(y)):
+		for b in range(2):
+			if y[a][b] == x:
+				if b:
+					return y[a][0]
+				else:
+					return y[a][1]
+N = int(fin.readline().rstrip("\n"))
+wormholes = []
+for i in range(N):
+	wormholes.append(fin.readline().rstrip("\n").split())
+
+for wormhole in wormholes:
+	wormhole[0] = int(wormhole[0])
+	wormhole[1] = int(wormhole[1])
+wormholes.sort()
+
+total = 0
+for pairs in recursive(wormholes):
+	infinite = False
+	for x in range(len(pairs)):
+		for y in range(2):
+			start = pairs[x][y]
+			for i in range(len(pairs) * 2):
+				next = other(start, pairs)
+				if onRight(next, wormholes) != []:
+					if i == len(pairs) * 2 - 1:
+						total += 1
+						infinite = True
+						break
+					else:
+						start = onRight(next, pairs)
+				else:
+					break
+			if infinite:
+				break
+		if infinite:
+			break	
+
+fout.write(str(total) + "\n")

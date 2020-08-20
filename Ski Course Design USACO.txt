@@ -1,0 +1,36 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: skidesign
+"""
+
+fin = open('skidesign.in', 'r')
+
+N = int(fin.readline().rstrip("\n"))
+
+hills = []
+
+for i in range(N):
+	hills.append(int(fin.readline().rstrip("\n")))
+
+hills.sort()
+
+prices = []
+
+for i in range(hills[0], hills[-1] + 1 - 17):
+	price = 0
+	short = i
+	tall = i + 17
+	for x in range(len(hills)):
+		if hills[x] > tall:
+			price += (hills[x] - tall) * (hills[x] - tall)
+	for y in range(len(hills)):
+		if hills[y] < short:
+			price += (short - hills[y]) * (short - hills[y])
+	prices.append(price)
+
+prices.sort()
+
+fout = open('skidesign.out', 'w')
+
+fout.write(str(prices[0]) + "\n")
