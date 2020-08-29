@@ -1,0 +1,52 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: ariprog
+"""
+import time
+
+start_time = time.time()
+fin = open('ariprog.in', 'r')
+
+N = int(fin.readline().rstrip("\n"))
+
+M = int(fin.readline().rstrip("\n"))
+
+max = M * M * 2
+smallerN = N-1
+smallestN = N-2
+bisquares = set()
+b_set = set()
+
+for a in range(M + 1):
+	for b in range(M + 1):
+		bisquare = a * a + b * b
+		bisquares.add(bisquare)
+
+for i in range(1, N - 1):
+	if (b != smallerN // 2):
+		b_set.add(i)
+
+sequences = []
+fout = open('ariprog.out', 'w')
+
+for bisquare in bisquares:
+	maxA = (max - bisquare) // smallerN + 1
+	for a in range(1, maxA):
+		if (bisquare + a * smallerN in bisquares) and (bisquare + a * 2 in bisquares) and (bisquare + a * smallestN in bisquares) and (bisquare + a * (smallestN - 1) in bisquares):
+			for b in b_set:
+				if bisquare + a * b not in bisquares:
+					break
+				elif b is smallestN:
+					sequences.append((a, bisquare))
+
+
+
+
+sequences.sort()
+if sequences != []:
+	for sequence in sequences:
+		fout.write(str(sequence[1]) + " " + str(sequence[0]) + "\n")
+else:
+	fout.write("NONE\n")
+print("Finish: {}".format(time.time()-start_time))

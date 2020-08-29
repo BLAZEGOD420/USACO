@@ -1,0 +1,35 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: numtri
+"""
+fin = open("numtri.in", 'r')
+fout = open("numtri.out", 'w')
+
+R = int(fin.readline().rstrip("\n"))
+
+rows = {}
+
+for i in range(R):
+	rows[i] = [int(x) for x in fin.readline().rstrip("\n").split()]
+
+current = [0 for i in range(R)]
+old = current.copy()
+old[0] = rows[0][0]
+
+for r in range(1, R):
+	for c in range(r + 1):
+		stay = old[c] + rows[r][c]
+		left = 0
+		if c != 0:
+			left = old[c - 1] + rows[r][c]
+		if stay > left:
+			current[c] = stay
+		else:
+			current[c] = left
+	old = current.copy()
+
+old.sort()
+
+fout.write(str(old[-1]) + "\n")
+	

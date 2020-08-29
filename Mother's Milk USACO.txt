@@ -1,0 +1,97 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: milk3
+"""
+
+fin = open('milk3.in', 'r')
+
+A, B, C = fin.readline().rstrip("\n").split()
+A = int(A)
+B = int(B)
+C = int(C)
+max = {0: A, 1: B, 2: C}
+possibilities = []
+
+def recursive(amounts):
+	new = []
+	for i in [1,2]:
+		amountsA = amounts.copy()
+		current = 0
+		next = i
+		currentMilk = amountsA[current]
+		nextMilk = amountsA[i]
+
+		if currentMilk > max.get(next) - nextMilk:
+			currentMilk = currentMilk - (max.get(next) - nextMilk)
+			nextMilk = max.get(next)
+		else:
+			nextMilk += currentMilk
+			currentMilk = 0
+
+
+		amountsA[current] = currentMilk
+		amountsA[next] = nextMilk
+		if amountsA not in new:
+			new.append(amountsA)
+	for i in [0,2]:
+		amountsB = amounts.copy()
+		current = 1
+		next = i
+		currentMilk = amountsB[current]
+		nextMilk = amountsB[i]
+		if currentMilk > max.get(next) - nextMilk:
+			currentMilk = currentMilk - (max.get(next) - nextMilk)
+			nextMilk = max.get(next)
+		else:
+			nextMilk += currentMilk
+			currentMilk = 0
+
+		amountsB[current] = currentMilk
+		amountsB[next] = nextMilk
+		if amountsB not in new:
+			new.append(amountsB)
+	for i in [0,1]:
+		amountsC = amounts.copy()
+		current = 2
+		next = i
+		currentMilk = amountsC[current]
+		nextMilk = amountsC[i]
+		if currentMilk > max.get(next) - nextMilk:
+			currentMilk = currentMilk - (max.get(next) - nextMilk)
+			nextMilk = max.get(next)
+		else:
+			nextMilk += currentMilk
+			currentMilk = 0
+
+		amountsC[current] = currentMilk
+		amountsC[next] = nextMilk
+		if amountsC not in new:
+			new.append(amountsC)	
+	appended = 0
+	for x in new:
+		if x not in possibilities:
+			appended += 1
+			possibilities.append(x)
+			recursive(x)
+	if appended == 0:
+		return
+			
+recursive([0,0,C])
+fout = open('milk3.out', 'w')
+c_list = []
+print(possibilities)
+for possibility in possibilities:
+	if possibility[2] not in c_list and possibility[0] == 0:
+		c_list.append(possibility[2])
+
+c_list.sort()
+for i in range(len(c_list)):
+	c_list[i] = str(c_list[i])
+
+fout.write(" ".join(c_list) + "\n")
+			
+			
+		
+			
+		
