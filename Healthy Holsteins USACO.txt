@@ -1,0 +1,61 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: holstein
+"""
+from itertools import combinations
+fin = open("holstein.in", "r")
+fout = open("holstein.out", "w")
+
+V = int(fin.readline().rstrip("\n"))
+
+minimum = {}
+temp = [int(i) for i in fin.readline().rstrip("\n").split()]
+
+for i in range(V):
+	minimum[i] = temp[i]
+
+scoops = {}
+
+G = int(fin.readline().rstrip("\n"))
+for i in range(1, G + 1):
+	scoops[i] = [int(i) for i in fin.readline().rstrip("\n").split()]
+
+good = []
+for i in range(1, G + 1):
+	done = False
+	combs = list(combinations([x for x in range(1, G + 1)], i))
+	for comb in combs:
+		feedable = True
+		for x in range(V):
+			total = 0
+			for scoop in comb:
+				total += scoops[scoop][x]
+			if total < minimum[x]:
+				feedable = False
+				break
+		if feedable:
+			done = True
+			good.append([i, comb])
+	if done:
+		break
+best = [0, 0, 0]
+
+for thing in good:
+	print(thing)
+	total = 0
+	for index in thing[1]:
+		for amount in scoops[index]:
+			total += amount
+
+	if total > best[2]:
+		best[0] = thing[0]
+		best[1] = thing[1]
+		best[2] = total
+
+fout.write(str(best[0]))
+
+for index in best[1]:
+	fout.write(" " + str(index))
+
+fout.write("\n")

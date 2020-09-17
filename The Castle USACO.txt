@@ -1,0 +1,146 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: castle
+"""
+
+import copy
+from itertools import combinations
+fin = open('castle.in', 'r')
+fout = open('castle.out', 'w')
+
+M, N = (int(i) for i in fin.readline().rstrip("\n").split())
+
+directions = {1: 'W', 2: 'N', 4: 'E', 8: 'S'}
+combs = {}
+
+for i in range(1, 5):
+	temp = list(combinations([1, 2, 4, 8], i))
+	for comb in temp:
+		total = 0
+		d = []
+		for thing in comb:
+			total += thing
+			d.append(directions[thing])
+		combs[total] = d
+combs[0] = []
+rooms = {}
+for y in range(1, N + 1):
+	line = [int(i) for i in fin.readline().rstrip("\n").split()]
+	for x in range(1, M + 1):
+		rooms[x, y] = combs[line[x-1]]
+
+def connect(castle):
+	temp = {}
+	for point in castle.keys():
+		temp2 = []
+		walls2 = set()
+		if castle[point] != None:
+			walls2 = set(castle[point])
+		for wall in set(['N', 'S', 'E', 'W']) - walls2:
+			if wall == 'N':
+				if point[1] != 0:
+					temp2.append([point[0], point[1] - 1])
+			elif wall == 'S':
+				if point[1] != N:
+					temp2.append([point[0], point[1] + 1])
+			elif wall == 'E':
+				if point[0] != M:
+					temp2.append([point[0] + 1, point[1]])
+			elif wall == 'W':
+				if point[0] != 0:
+					temp2.append([point[0] - 1, point[1]])
+		temp[point] = temp2
+	return temp
+
+def next(connections, previous, room, visited):
+	temp = set()
+	for point in previous:
+		for connection in connections[point]:
+			if (tuple(connection) not in room) and (tuple(connection) not in temp) and (tuple(connection) not in visited):
+				temp.add(tuple(connection))
+	return temp		
+
+def info(castle):
+	visited = set()
+	rooms2 = []
+	connections = connect(castle)
+	for point in castle.keys():
+		if point not in visited:
+			room = set()
+			room.add(point)
+			previous = set()
+			previous.add(point)
+			while True:
+				new = next(connections, previous, room, visited)
+				if new:
+					room = room|new
+					previous = new
+				else:
+					break
+			rooms2.append(list(room))
+			visited = visited|room
+	return rooms2
+
+details = info(rooms)
+largest = 0
+number = len(details)
+for detail in details:
+	maybe = len(detail)
+	if maybe > largest:
+		largest = maybe
+fout.write(str(number) + "\n")
+fout.write(str(largest) + "\n")
+if (largest != 1 or N == 1):
+	details = sorted(details, key=len)
+	order = []
+	pairs = {}
+	for a in range(len(details)):
+		for b in range(len(details)):
+			if a != b:
+				if pairs.get(len(details[a]) + len(details[b])):
+					pairs[len(details[a]) + len(details[b])].append((a,b))
+				else:
+					pairs[len(details[a]) + len(details[b])]=[(a,b)]
+					order.append((len(details[a]) + len(details[b])))
+	for num in sorted(order, reverse = True):
+		duos = pairs[num]
+		edges = []
+		for duo in duos:
+			room1 = details[duo[0]]
+			room2 = details[duo[1]]
+			for point1 in room1:
+				for point2 in room2:
+					if abs(point1[0] - point2[0]) == 1 and (point1[1] == point2[1]):
+						if point1[0] > point2[0]:
+							noice = list(point2) + ['E']
+							edges.append(noice)
+						else:
+							noice = list(point1) + ['E']
+							edges.append(noice)
+					elif abs(point1[1] - point2[1]) == 1 and (point1[0] == point2[0]):
+						if point1[1] > point2[1]:
+							noice = list(point1) + ['N']
+							edges.append(noice)
+						else:
+							noice = list(point2) + ['N']
+							edges.append(noice)
+		if edges:
+			best = [M,1,0]
+			for edge in edges:
+				if edge[0] < best[0]:
+					best = edge
+				elif edge[0] == best[0]:
+					if edge[1] > best[1]:
+						best = edge
+					elif edge[1] == best[1]:
+						if edge[2] == 'N':
+							best = edge
+			
+							
+			fout.write(str(num) + "\n")
+			fout.write(str(best[1]) + " " + str(best[0]) + " " + best[2] + "\n")		
+			break
+else:
+	fout.write(str(largest * 2) + "\n")
+	fout.write(str(N) + " " + str(largest) + " N" + "\n")

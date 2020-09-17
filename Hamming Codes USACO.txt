@@ -1,0 +1,48 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: hamming
+"""
+
+fin = open('hamming.in', 'r')
+fout = open('hamming.out', 'w')
+
+N, B, D = (int(i) for i in fin.readline().rstrip("\n").split())
+
+code_words = [0]
+def distance(a, b, d):
+	a_binary = str(bin(a))[2:]
+	b_binary = str(bin(b))[2:]                  
+	while len(a_binary) < len(b_binary):
+		a_binary = "0" + a_binary
+	hamming = 0
+	for i in range(len(b_binary)):
+		if a_binary[i] != b_binary[i]:
+			hamming += 1
+	if hamming >= d:
+		return True
+	else:
+		return False
+
+
+for i in range(1, 2**(B + 1)):
+	for code_word in code_words:
+		if not distance(code_word, i, D):
+			break
+		elif distance(code_word, i, D) == "BRU":
+			continue
+	else:
+		code_words.append(i)
+		if len(code_words) == N:
+			break
+line = 0
+for i in range(len(code_words)):
+	if line != 9:
+		if i == N - 1:
+			fout.write(str(code_words[i]) + "\n")
+		else:
+			fout.write(str(code_words[i]) + " ")
+			line += 1
+	else:
+		fout.write(str(code_words[i]) + "\n")
+		line = 0

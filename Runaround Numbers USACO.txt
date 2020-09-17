@@ -1,0 +1,32 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: runround
+"""
+
+
+fin = open('runround.in', 'r')
+fout = open('runround.out', 'w')
+
+M = int(fin.readline().rstrip("\n"))
+
+def check(num):
+	index = 0
+	numbers = set()
+	num = str(num)
+	numbers.add(num[0])
+	while True:
+		index += int(num[index])
+		if index > len(num) - 1:
+			index = index % len(num)
+		if num[index] not in numbers:
+			numbers.add(num[index])
+		else:
+			if len(numbers) == len(num) and index == 0:
+				return True
+			else:
+				return False
+for i in range(M + 1, 1000000000):
+	if check(i):
+		fout.write(str(i) + "\n")
+		break

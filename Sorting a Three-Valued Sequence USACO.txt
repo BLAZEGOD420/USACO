@@ -1,0 +1,86 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: sort3
+"""
+
+
+fin = open('sort3.in', 'r')
+fout = open('sort3.out', 'w')
+
+N = int(fin.readline().rstrip("\n"))
+
+records = []
+
+for i in range(N):
+	records.append(int(fin.readline().rstrip("\n")))
+
+def is_sorted(num, index, records):
+	for i in range(index):
+		if records[i] > num:
+			return i
+	return True
+
+swaps = 0
+
+one_count = 0
+two_count = 0
+three_count = 0
+
+for record in records:
+	if record == 1:
+		one_count += 1
+	elif record == 2:
+		two_count += 1
+	elif record == 3:
+		three_count += 1
+one_end = one_count
+two_end= one_end + two_count
+three_end = two_end + three_count
+
+for x in range(one_end, two_end):
+	if records[x] == 1:
+		for y in range(one_end):
+			if records[y] == 2:
+				records[y] = 1
+				records[x] = 2
+				swaps += 1
+				break
+for x in range(two_end, three_end):
+	if records[x] == 1:
+		for y in range(one_end):
+			if records[y] == 3:
+				records[y] = 1
+				records[x] = 3
+				swaps += 1
+				break
+
+for x in range(two_end, three_end):
+	if records[x] == 2:
+		for y in range(one_end - 1, two_end):
+			if records[y] == 3:
+				records[y] = 2
+				records[x] = 3
+				swaps += 1
+				break		
+print(records)
+for x in range(1, 4):
+	done = False
+	for y in range(len(records) - 1, -1, -1):
+		if records[y] == x:
+			temp = is_sorted(x, y, records)
+			if type(temp) == int:
+				records[y] = records[temp]
+				records[temp] = x
+				swaps += 1
+		if sorted(records) == records:
+			done = True
+			break
+	if done:
+		break
+			
+
+fout.write(str(swaps) + "\n")
+			
+		
+			                 

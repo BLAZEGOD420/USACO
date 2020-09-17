@@ -1,0 +1,24 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: frac1
+"""
+
+fin = open('frac1.in', 'r')
+fout = open('frac1.out', 'w')
+
+N = int(fin.readline().rstrip("\n"))
+fractions = {0: "0/1", 1: "1/1"}
+for d in range(1, N + 1):
+	for n in range(1, d):
+		if not fractions.get(n/d):
+			fractions[n/d] = str(n) + "/" + str(d)
+
+decimals = []
+for decimal in fractions.keys():
+	decimals.append(decimal)
+
+decimals.sort()
+for decimal in decimals:
+	fout.write(fractions[decimal] + "\n")
+		
