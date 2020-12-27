@@ -1,0 +1,50 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: prefix
+"""
+
+from itertools import combinations
+
+fin = open("prefix.in", "r")
+fout = open("prefix.out", "w")
+primitives = []
+
+while True:
+	line = fin.readline().rstrip("\n")
+	if line != ".":
+		for i in line.split():
+			primitives.append(i)
+	else:
+		break
+
+primitives.sort(key = len, reverse = True)
+sequence = ""
+while True:
+	line = fin.readline().rstrip("\n")
+	if line != "":
+		sequence += line
+	else:
+		break
+
+for primitive in primitives:
+	if primitive not in sequence:
+		primitives.remove(primitive)
+
+possibilities = []
+count = 0
+output = False
+for i in range(len(sequence)):
+	found = False
+	for primitive in primitives:
+		if primitive == sequence[i:i+len(primitive)]:
+			count = i + len(primitive)
+			found = True
+			break
+	if not found and i >= count:
+		fout.write(str(count) + "\n")
+		output = True
+		break
+
+if not output:
+	fout.write(str(count) + "\n")

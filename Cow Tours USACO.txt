@@ -1,0 +1,98 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: cowtour
+"""
+fin = open('cowtour.in', 'r')
+fout = open('cowtour.out', 'w')
+N = int(fin.readline().rstrip("\n"))
+d = {}
+for i in range(N):
+	coords = [int(i) for i in fin.readline().rstrip("\n").split()]
+	d[i] = coords
+matrix = []
+matrix2 = []
+for i in range(N):
+	line = [int(i) for i in fin.readline().rstrip("\n")]
+	matrix.append(line.copy())
+	matrix2.append(line.copy())
+for row in range(N):
+	for column in range(N):
+		if matrix[row][column] == 1:
+			matrix2[row][column] = (abs(d[row][0] - d[column][0]) ** 2 + abs(d[row][1] - d[column][1]) ** 2) ** .5
+		else:
+			matrix2[row][column] = float('inf')
+fields = []
+fieldNumber = 0
+visited = []
+while True:
+	fields.append([list(set(d.keys()) - set(visited))[0]])
+	while True:
+		length = len(fields[fieldNumber])
+		for v in fields[fieldNumber].copy():
+			if v not in visited:
+				visited.append(v)
+				for i in range(N):
+					if matrix[v][i] == 1 and (i not in fields[fieldNumber]):
+						fields[fieldNumber].append(i)
+		if len(fields[fieldNumber]) == length:
+			break
+	if set(visited) == set(d.keys()):
+		break
+	else:
+		fieldNumber += 1
+def algorithm(nodes, source):
+	distance = {}
+	visited = set()
+	parent = {}
+	for i in nodes:
+		distance[i] = float('inf')
+		parent[i] = -1
+	distance[source] = 0
+	while (len(visited) < len(nodes)):
+		i = []
+		for c in nodes:
+			if c not in visited:
+				if i:
+					if distance[c] < distance[i]:
+						i = c
+				else:
+					i = c
+		visited.add(i)
+		for c in nodes:
+			if matrix[i][c] == 1:
+				if distance[i] + matrix2[i][c] < distance[c]:
+					distance[c] = distance[i] + matrix2[i][c]
+					parent[c] = i
+	return sorted(list(distance.values()))[-1]
+diameters = []
+num = len(fields)
+for i in range(num):
+	for j in range(i + 1, num):
+		field1 = fields[i]
+		field2 = fields[j]
+		lowest = []
+		aPaths = {}
+		bPaths = {}
+		for a in field1:
+			aPaths[a] = algorithm(field1, a)
+		maxField1 = sorted(i for i in list(aPaths.values()) if i != float('inf'))[-1]
+		for b in field2:
+			bPaths[b] = algorithm(field2, b)
+		maxField2 = sorted(i for i in list(bPaths.values()) if i != float('inf'))[-1]
+		for a in field1:
+			for b in field2:
+				distance = (abs(d[a][0] - d[b][0]) ** 2 + abs(d[a][1] - d[b][1]) ** 2) ** .5
+				distance += aPaths[a] + bPaths[b]
+				if distance < maxField1:
+					distance = maxField1
+				if distance < maxField2:
+					distance = maxField2
+				lowest.append(distance)
+		lowest.sort()
+		diameters.append(lowest[0])
+diameters.sort()
+fout.write("{:0.6f}\n".format(diameters[0]))
+
+
+

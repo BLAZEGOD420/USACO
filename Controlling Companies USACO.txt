@@ -1,0 +1,56 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: concom
+"""
+
+fin = open('concom.in', 'r')
+fout = open('concom.out', 'w')
+
+dp = {}
+owned = {}
+N = int(fin.readline().rstrip("\n"))
+
+for i in range(1, 101):
+	dp[i] = {}
+	owned[i] = {}
+	for z in range(1, 101):
+		dp[i][z] = 0
+		if i == z:
+			owned[i][z] = 1
+		else:
+			owned[i][z] = 0
+
+def recursive(one, two):
+	if owned[one][two]:
+		return
+	owned[one][two] = 1
+	
+	for three in range(1, 101):
+		dp[one][three] += dp[two][three]
+	
+	for three in range(1, 101):
+		if owned[three][one]:
+			recursive(three, two)
+	
+	for three in range(1, 101):
+		if dp[one][three] > 50:
+			recursive(one, three)
+	
+	
+for i in range(N):
+	one, two, percent = (int(i) for i in fin.readline().rstrip("\n").split())
+	for three in range(1, 101):
+		if owned[three][one]:
+			dp[three][two] += percent
+	for three in range(1, 101):
+		if dp[three][two] > 50:
+			recursive(three, two)
+	
+
+
+for one in range(1, 101):
+	for two in range(1, 101):
+		if dp[one][two] > 50:
+			if one != two and owned[one][two]:
+				fout.write(str(one) + " " + str(two) + "\n")

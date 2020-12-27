@@ -1,0 +1,28 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: nocows
+"""
+
+fin = open('nocows.in', 'r')
+fout = open('nocows.out', 'w')
+
+N, K = (int(i) for i in fin.readline().split())
+
+dp = []
+for i in range(N + 1):
+	dp.append([0] * (K + 1))
+
+for i in range(1, K + 1):
+	dp[1][i] = 1
+	dp[0][i] = 1
+
+for k in range(2, K + 1):
+	for n in range(1, N + 1, 2):
+		for i in range(1, n, 2):
+			dp[n][k] += dp[i][k - 1] * dp[n - 1 - i][k - 1]
+
+
+fout.write(str((dp[N][K] - dp[N][K - 1]) % 9901) + "\n")
+
+print(dp)

@@ -1,0 +1,49 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: fracdec
+"""
+fin = open('fracdec.in', 'r')
+fout = open('fracdec.out', 'w')
+N, D = (int(i) for i in fin.readline().rstrip("\n").split())
+expansion = []
+remainders = {}
+repeating = []
+beginning = ""
+if "e-" in str(N/D):
+	beginning = "0"
+else:
+	beginning = str(N/D).split(".")[0]
+if len(str(N/D)) < 17:
+	if "." in str(N/D):
+		fout.write(str(N/D) + "\n")
+	else:
+		fout.write("0." + str(D)[2:] + str(N) + "\n")
+else:
+	N -= int(beginning) * D
+	if N == 0:
+		fout.write(beginning + ".0")
+	else:
+		division = ""
+		i = 0
+		remainder = N % D
+		while True:
+			if remainder in remainders:
+				repeating = expansion[remainders[remainder]:]
+				expansion = expansion[:remainders[remainder]]
+				break
+			remainders[remainder] = i
+			N = remainder * 10
+			expansion.append(str(N//D))
+			i += 1
+			remainder = N % D
+			
+	beginning += "." + "".join(expansion) + "(" + "".join(repeating) + ")"
+
+	while True:
+		if len(beginning) > 76:
+			fout.write(beginning[:76] + "\n")
+			beginning = beginning[76:]
+		else:
+			fout.write(beginning + "\n")
+			break

@@ -1,0 +1,24 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: subset
+"""
+from itertools import combinations
+fin = open('subset.in', 'r')
+fout = open('subset.out', 'w')
+N = int(fin.readline().rstrip("\n"))
+nums = set([i for i in range(1, N + 1)])
+half = int(sum(nums) / 2)
+dp = {0: 1}
+copy = dp.copy()
+if sum(nums) % 2 != 0:
+	fout.write("0\n")
+else:
+	for a in range(1, N + 1):
+		for b in range(len(copy)):
+			if dp.get(a + b):
+				dp[a + b] += copy[b]
+			else:
+				dp[a + b] = copy[b]
+		copy = dp.copy()
+	fout.write(str(int(dp[half]/2)) + "\n")

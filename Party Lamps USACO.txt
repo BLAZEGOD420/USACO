@@ -1,0 +1,88 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: lamps
+"""
+
+fin = open("lamps.in", "r")
+fout = open("lamps.out", "w")
+
+N = int(fin.readline().rstrip("\n"))
+C = int(fin.readline().rstrip("\n"))
+on = [int(i) for i in fin.readline().rstrip("-1\n").split()]
+off = [int(i) for i in fin.readline().rstrip("-1\n").split()]
+if C > 5:
+	C = 5
+def convert(lamp):
+	if lamp == "1":
+		return "0"
+	else:
+		return "1"
+def one(lamps):
+	for i in range(len(lamps)):
+		lamps[i] = convert(lamps[i])
+def two(lamps):
+	for i in range(0, len(lamps), 2):
+		lamps[i] = convert(lamps[i])
+
+def three(lamps):
+	for i in range(1, len(lamps), 2):
+		lamps[i] = convert(lamps[i])
+
+def four(lamps):
+	for i in range(0, len(lamps), 3):
+		lamps[i] = convert(lamps[i])
+
+old = []
+for x in range(C):
+	new = []
+	for y in range(len(old)):
+		for i in range(1, 5):
+			copy = old[y].copy()
+			copy.add(i)
+			if set(copy) not in new:
+				new.append(copy)
+	old = new.copy()	
+	if old:
+		if not new:
+			break
+		continue
+	else:
+		for i in range(1, 5):
+			old.append(set([i]))
+print(old)
+final = {}
+if not old:
+	old = [[]]
+for state in old:
+	start = list("1" * N)
+	for button in state:
+		if button == 1:
+			one(start)
+		elif button == 2:
+			two(start)
+		elif button == 3:
+			three(start)
+		elif button == 4:
+			four(start)
+	start = "".join(start)
+	good = True
+	for button in on:
+		if start[button - 1] != "1":
+			good = False
+			break
+	if good:
+		for button in off:
+			if start[button - 1] != "0":
+				good = False
+				break
+		if good:
+			print(start)
+			final[int("0b" + start, 2)] = start
+k = list(final.keys())
+k.sort()
+if final:
+	for key in k:
+		fout.write(final[key] + "\n")
+else:
+	fout.write("IMPOSSIBLE\n") 

@@ -1,0 +1,111 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK:ttwo
+"""
+
+fin = open('ttwo.in', 'r')
+fout = open('ttwo.out', 'w')
+
+map = []
+jStart = []
+cStart = []
+jLocation = []
+cLocation = []
+jDirection = "N"
+cDirection = "N"
+#jVisited = []
+#jVisited.append([jLocation, jDirection])
+#cVisited = []
+#cVisited.append([cLocation, cDirection])
+for i in range(10):
+	line = [i for i in fin.readline().rstrip("\n")]
+	for j in range(10):
+		if line[j] == "F":
+			jStart = [i, j]
+			jLocation = [i, j]
+			line[j] = '.'
+		if line[j] == "C":
+			cStart = [i, j]
+			cLocation = [i, j]
+			line[j] = '.'
+	map.append(line)
+
+def next(location, direction):
+	newLocation = [0, 0]
+	newDirection = ""
+	if direction == "N":
+		if location[0] != 0:
+			if map[location[0] - 1][location[1]] != "*":
+				newLocation[0] = location[0] - 1
+				newLocation[1] = location[1]
+				newDirection = direction
+			else:
+				newLocation = location
+				newDirection = "E"
+		else:
+			newLocation = location
+			newDirection = "E"
+	elif direction == "S":
+		if location[0] != 9:
+			if map[location[0] + 1][location[1]] != "*":
+				newLocation[0] = location[0] + 1
+				newLocation[1] = location[1]
+				newDirection = direction
+			else:
+				newLocation = location
+				newDirection = "W"
+		else:
+			newLocation = location
+			newDirection = "W"
+	elif direction == "E":
+		if location[1] != 9:
+			if map[location[0]][location[1] + 1] != "*":
+				newLocation[0] = location[0]
+				newLocation[1] = location[1] + 1
+				newDirection = direction
+			else:
+				newLocation = location
+				newDirection = "S"
+		else:
+			newLocation = location
+			newDirection = "S"
+	elif direction == "W":
+		if location[1] != 0:
+			if map[location[0]][location[1] - 1] != "*":
+				newLocation[0] = location[0]
+				newLocation[1] = location[1] - 1
+				newDirection = direction
+			else:
+				newLocation = location
+				newDirection = "N"
+		else:
+			newLocation = location
+			newDirection = "N"
+	return (newLocation, newDirection)
+
+minutes = 0
+#looped = set()
+while True:
+	jLocation, jDirection = next(jLocation, jDirection)
+	cLocation, cDirection = next(cLocation, cDirection)
+	minutes += 1
+	if jLocation == cLocation:
+		fout.write(str(minutes) + "\n")
+		break
+#	if [jLocation, jDirection] in jVisited:
+#		looped.add("J")
+#	else:
+#		jVisited.append([jLocation, jDirection])
+#	if [cLocation, cDirection] in cVisited:
+#		looped.add("C")
+#	else:
+#		cVisited.append([cLocation, cDirection])
+#	if looped == {"C", "J"}:
+#		fout.write("0\n")
+#		break
+	if minutes > 1000:
+		fout.write("0\n")
+		break
+		
+	
