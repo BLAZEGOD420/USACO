@@ -1,0 +1,44 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: comehome
+"""
+fin = open('comehome.in', 'r')
+fout = open('comehome.out', 'w')
+P = int(fin.readline().rstrip("\n"))
+alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+d = {}
+for i in range(52):
+	d[alphabet[i]] = i
+matrix = []
+for i in range(52):
+	matrix.append([])
+	for j in range(52):
+		matrix[i].append(float('inf'))
+cows = set()
+for i in range(P):
+	line = fin.readline().rstrip("\n").split()
+	if int(line[2]) <matrix[d[line[0]]][d[line[1]]]:
+		matrix[d[line[0]]][d[line[1]]] = int(line[2])
+		matrix[d[line[1]]][d[line[0]]] = int(line[2])
+	if line[0] == line[0].upper() and line[0] != 'Z':
+		cows.add(line[0])
+	if line[1] == line[1].upper() and line[1] != 'Z':
+		cows.add(line[1])
+dist = {}
+for i in range(52):
+	for j in range(52):
+		dist[(i, j)] = matrix[i][j]
+for k in range(52):
+	for i in range(52):
+		for j in range(52):
+			if dist[(i, k)] + dist[(j, k)] < dist[(i, j)]:
+				dist[(i, j)] = dist[(i, k)] + dist[(k, j)]
+lowest = []
+for cow in cows:
+	if lowest:
+		if dist[(d[cow], d['Z'])] < lowest[1]:
+			lowest = [cow, dist[(d[cow], d['Z'])]]
+	else:
+		lowest = [cow, dist[(d[cow], d['Z'])]]
+fout.write(lowest[0] + " " + str(lowest[1]) + "\n")

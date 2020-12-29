@@ -1,0 +1,61 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: maze1
+"""
+from operator import itemgetter
+fin = open('maze1.in', 'r')
+fout = open('maze1.out', 'w')
+W, H = (int(i) for i in fin.readline().rstrip("\n").split())
+if W == 1 and H == 1:
+	fout.write("1\n")
+else:
+	maze = []
+	connections = {}
+	exits = []
+	for y in range(2 * H + 1):
+		maze.append(fin.readline().rstrip("\n"))		
+	for y in range(H):
+		for x in range(W):
+			connections[(x, y)] = []
+			if maze[2 * y][2 * x + 1] == " ":
+				if y != 0:
+					connections[(x, y)].append((x, y - 1))
+				else:
+					exits.append((x, y))
+			if maze[2 * y + 2][2 * x + 1] == " ":
+				if y + 1 != H:
+					connections[(x, y)].append((x, y + 1))
+				else:
+					exits.append((x, y))
+			if maze[2 * y + 1][2 * x] == " ":
+				if x != 0:
+					connections[(x, y)].append((x - 1, y))
+				else:
+					exits.append((x, y))
+			if maze[2 * y + 1][2 * x + 2] == " ":
+				if x + 1 != W:
+					connections[(x, y)].append((x + 1, y))
+				else:
+					exits.append((x, y))
+	queue = exits.copy()
+	visited = set()
+	dist = {}
+	steps = 0
+	while True:
+		vLength = len(visited)
+		print(queue)
+		copy = queue.copy()
+		queue = []
+		for i in copy:
+			dist[i] = steps
+			visited.add(i)
+			for j in connections[i]:
+				if j not in visited and j not in copy and j not in queue:
+					queue.append(j)
+		if vLength == len(visited):
+			break
+		else:
+			steps += 1
+	fout.write(str(sorted(dist.values())[-1] + 1) + "\n")
+			
