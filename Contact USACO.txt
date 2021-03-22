@@ -1,0 +1,54 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: contact
+"""
+import re
+fin = open('contact.in', 'r')
+fout = open('contact.out', 'w')
+A, B, N = (int(i) for i in fin.readline().rstrip("\n").split())
+sequence = ""
+patterns = {}
+occurences = {}
+while True:
+	line = fin.readline().rstrip("\n")
+	if line != "":
+		sequence += line
+	else:
+		break
+for i in range(A, B + 1):
+	for j in range(0, len(sequence) - i + 1):
+		pattern = sequence[j:j+i]
+		if pattern in patterns:
+			patterns[pattern] += 1
+		else:
+			patterns[pattern] = 1
+
+for pattern in patterns:
+	if patterns[pattern] in occurences:
+		occurences[patterns[pattern]].append(pattern)
+	else:
+		occurences[patterns[pattern]] = [pattern]
+
+def sorter(item):
+	length = len(item)
+	value = int(item, 2)
+	return(length, value)
+	
+count = 0
+for num in sorted(occurences.keys(), reverse = True):
+	if count < N:
+		fout.write(str(num) + "\n")
+		line = sorted(occurences[num], key = sorter)
+		if len(line) > 6:
+			div = len(line) // 6
+			mod = len(line) % 6
+			for i in range(div):
+				fout.write(" ".join(line[i * 6:i * 6 + 6]) + "\n")
+			if mod != 0:
+				fout.write(" ".join(line[div * 6: div * 6 + mod]) + "\n")
+		else:
+			fout.write(" ".join(line) + "\n")
+		count += 1
+	else:
+		break

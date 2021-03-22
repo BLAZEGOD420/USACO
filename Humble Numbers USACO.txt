@@ -1,0 +1,42 @@
+/*
+ID: howieen1
+TASK: humble
+LANG: C++
+*/
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
+using namespace std;
+int main() {
+	ifstream fin ("humble.in");
+	ofstream fout ("humble.out");
+	int K, N;
+	fin >> K >> N;
+	int primes[K], searchStart[K];
+	long humbleNums[N + 1], nextHumbles[K];
+	humbleNums[0] = 1;
+	for (int i = 0; i < K; i++) {
+		fin >> primes[i];
+		nextHumbles[i] = primes[i];
+		searchStart[i] = 0;
+	}
+	for (int i = 1; i < N + 1; i++) {
+		long x = nextHumbles[0];
+		for (int j = 1; j < K; j++) {
+			if (nextHumbles[j] < x) {
+				x = nextHumbles[j];
+			}
+		}
+		humbleNums[i] = x;
+		for (int j = 0; j < K; j++) {
+			if (humbleNums[i] == nextHumbles[j]) {
+				searchStart[j] += 1;
+				nextHumbles[j] = humbleNums[searchStart[j]] * primes[j];
+			}
+		}
+	}
+	fout << humbleNums[N] << endl;
+	return 0;
+}
+

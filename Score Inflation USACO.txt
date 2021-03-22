@@ -1,0 +1,40 @@
+"""
+ID: howieen1
+LANG: PYTHON3
+TASK: inflate
+"""
+fin = open('inflate.in', 'r')
+fout= open('inflate.out', 'w')
+M, N = (int(i) for i in fin.readline().rstrip("\n").split())
+
+if M * N < 10000000:
+	optimal = {}
+	for i in range(M + 1):
+		optimal[i] = 0
+
+	for i in range(N):
+		line = [int(i) for i in fin.readline().rstrip("\n").split()]
+		points = line[0]
+		time = line[1]
+		for j in range(M - time + 1):
+			if optimal[j] + points > optimal[j + time]:
+				optimal[j + time] = optimal[j] + points
+
+	fout.write(str(sorted(optimal.values())[-1]) + "\n")
+else:
+	time = 0
+	score = 0
+	efficiency = {}
+	for i in range(N):
+		line = [int(i) for i in fin.readline().rstrip("\n").split()]
+		if line[0] / line[1] in efficiency:
+			efficiency[line[0] / line[1]].append(line[1])
+		else:
+			efficiency[line[0] / line[1]] = [line[1]]
+	
+	for i in sorted(efficiency.keys(), reverse = True):
+		num = (M - time) // sorted(efficiency[i])[0]
+		time += num * sorted(efficiency[i])[0]
+		score += i * sorted(efficiency[i])[0] * num
+	
+	fout.write(str(int(score)) + "\n")
